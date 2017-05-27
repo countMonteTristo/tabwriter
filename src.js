@@ -4,7 +4,7 @@ var canvas = document.getElementById('notation');
 canvas.width = canvas.clientWidth;
 canvas.height =canvas.clientHeight;
 var context = canvas.getContext('2d');
-//context.translate(0.5, 0.5);
+context.translate(0.5, 0.5);
 var backgroundColor = '#fffff0';
 var marginWidth = 40;
 
@@ -79,43 +79,55 @@ var parseInputString = function(inputString) {
   var atoms = inputString.split(' ');
   var timeSignatureGap = barWidth / 4;
 
-  var cursor = startOfBars[0] + (timeSignatureGap / 2);
+  var cursor;
+  var resetCursor = function() {
+    cursor = startOfBars[0] + (timeSignatureGap / 2);
+  };
+  resetCursor();
   var currentStringPos = guitarStrings[0];
-
+  var currentStaveOffset = 0.0;
+  var inChordMode = false;
 
   var printNotes = function(index) {
     drawNote(atoms[i].substring(1), cursor, currentStringPos );
-    cursor += timeSignatureGap;
+    if(!inChordMode) {
+      cursor += timeSignatureGap;
+    }
   }
+
   for( var i=0; i < atoms.length; i++) {
     if( atoms[i].substring(0,1) === 'e' ) {
-      currentStringPos = guitarStrings[0];
+      currentStringPos = guitarStrings[0 + currentStaveOffset];
       printNotes(i);
     }
     else if ( atoms[i].substring(0,1) === 'b' ) {
-      currentStringPos = guitarStrings[1];
+      currentStringPos = guitarStrings[1 + currentStaveOffset];
       printNotes(i);
 
     }
     else if ( atoms[i].substring(0,1) === 'g' ) {
-      currentStringPos = guitarStrings[2];
+      currentStringPos = guitarStrings[2 + currentStaveOffset];
       printNotes(i);
 
     }
     else if ( atoms[i].substring(0,1) === 'd' ) {
-      currentStringPos = guitarStrings[3];
+      currentStringPos = guitarStrings[3 + currentStaveOffset];
       printNotes(i);
 
     }
     else if( atoms[i].substring(0,1) === 'a' ) {
-      currentStringPos = guitarStrings[4];
+      currentStringPos = guitarStrings[4 + currentStaveOffset];
       printNotes(i);
 
     }
     else if( atoms[i].substring(0,1) === 'E' ) {
-      currentStringPos = guitarStrings[5];
+      currentStringPos = guitarStrings[5] + currentStaveOffset;
       printNotes(i);
 
+    }
+    else if( atoms[i].substring(0,1) === 'r' ) {
+      //rest note; skip a position
+      cursor += timeSignatureGap;
     }
     else if( (atoms[i].substring(0,1) === '{') && (isDigit(atoms[i].substring(1,2)))
               && (atoms[i].slice(-1) === '}') ) {
@@ -123,6 +135,18 @@ var parseInputString = function(inputString) {
       var timeString = 'current time signature: ' + timeSig.toString() + '/4';
       timeSignatureGap = getTimeSignatureGap(parseInt(timeSig));
       drawNote(timeString, leftMargin + 25, 25);
+    }
+    else if( (atoms[i].substring(0,1) === '[')) {
+      inChordMode = true;
+    }
+    else if( (atoms[i].substring(0,1) === ']')) {
+      inChordMode = false;
+      cursor += timeSignatureGap;
+    }
+    else if( atoms[i] === '\n' ) {
+      currentStaveOffset += 6;
+      console.log(currentStaveOffset);
+      resetCursor();
     }
   }
 };
@@ -132,7 +156,8 @@ var clearNotation = function() {
     $('#notation').width(),
     $('#notation').height(),
   );
-}
+};
+
 var getLeftMargin = function() {
   return marginWidth;
 }
@@ -189,27 +214,37 @@ var drawStringNotes = function() {
   }
 }
 
-var drawTab = function(tabstring, x, y) {
-  //on each invocation redraw lines
-  drawAllLines();
-  x = 100;
-  y = 100;
-  var chars = tabstring.split('');
-  for( var i=0; i < chars.length; i++) {
-    drawNote(chars[i], x, guitarStrings[2] );
-    x += 22;
-  }
-}
+// var drawTab = function(tabstring, x, y) {
+//   //on each invocation redraw lines
+//   drawAllLines();
+//   x = 100;
+//   y = 100;
+//   var chars = tabstring.split('');
+//   for( var i=0; i < chars.length; i++) {
+//     drawNote(chars[i], x, guitarStrings[2] );
+//     x += 22;
+//   }
+// }
 
 var drawNote = function(noteString, x, y) {
-  var textRectSize = 20;
+  var textRectHeight = 20;
+  var textRectWidthOneChar = textRectHeight;
+  var textRectWidthTwoChar = textRectHeight * 2;
+  var textRectWidth;
+  if(noteString.length === 1) {
+    textRectWidth = textRectWidthOneChar;
+  } else if (noteString.length === 2) {
+    textRectWidth = textRectWidthTwoChar;
+  }
   var leftMargin = getLeftMargin();
   context.fillStyle = backgroundColor;
   context.font = '16px sans-serif';
   context.textBaseline = 'middle';
-  context.fillRect(x - (textRectSize / 3.5), y - (textRectSize / 1.75),
-                   textRectSize, textRectSize);
-  context.strokeText(noteString, x, y);
+
+  context.fillRect(x - (textRectWidth / 3.5), y - (textRectHeight / 1.75),
+                   textRectWidth, textRectHeight);
+  context.fillStyle = 'black';
+  context.fillText(noteString, x, y);
 
   /** just a test *****
   for(var i=0; i < guitarStrings.length; i++) {
