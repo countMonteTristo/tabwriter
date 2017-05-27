@@ -1,12 +1,12 @@
 $(document).ready(function () {
 
 var canvas = document.getElementById('notation');
-canvas.width = canvas.clientWidth;
-canvas.height =canvas.clientHeight;
 var context = canvas.getContext('2d');
 context.translate(0.5, 0.5);
 var backgroundColor = '#fffff0';
 var marginWidth = 40;
+var height = $('#notation').height();
+console.log(height);
 
 var startOfBars = [];
 $( "#input_textarea" ).keyup(function() {
@@ -74,6 +74,7 @@ var isDigit = function(string) {
 var parseInputString = function(inputString) {
   clearNotation();
   drawAllLines();
+  showBarGuidelines();
 
   //SPLIT BY SPACE TOKEN
   var atoms = inputString.split(' ');
@@ -214,18 +215,6 @@ var drawStringNotes = function() {
   }
 }
 
-// var drawTab = function(tabstring, x, y) {
-//   //on each invocation redraw lines
-//   drawAllLines();
-//   x = 100;
-//   y = 100;
-//   var chars = tabstring.split('');
-//   for( var i=0; i < chars.length; i++) {
-//     drawNote(chars[i], x, guitarStrings[2] );
-//     x += 22;
-//   }
-// }
-
 var drawNote = function(noteString, x, y) {
   var textRectHeight = 20;
   var textRectWidthOneChar = textRectHeight;
@@ -237,7 +226,7 @@ var drawNote = function(noteString, x, y) {
     textRectWidth = textRectWidthTwoChar;
   }
   var leftMargin = getLeftMargin();
-  context.fillStyle = backgroundColor;
+  context.fillStyle = 'green';//backgroundColor;
   context.font = '16px sans-serif';
   context.textBaseline = 'middle';
 
@@ -255,6 +244,18 @@ var drawNote = function(noteString, x, y) {
   }
   **/
 }
+var showBarGuidelines = function() {
+  context.strokeStyle = 'red';
+
+  for(var i=0; i<startOfBars.length; i++) {
+    context.beginPath();
+    context.moveTo(startOfBars[i], 50);
+    context.lineTo(startOfBars[i], height);
+    context.stroke();
+    context.closePath();
+  }
+  context.strokeStyle = 'black';
+}
 
 var getKeyValue = function(keycode) {
   return String.fromCharCode((96 <= keycode && keycode <= 105)? (keycode - 48) : keycode);
@@ -264,6 +265,7 @@ var getKeyValue = function(keycode) {
 defineStringPositions();
 defineBarPositions();
 drawAllLines();
+showBarGuidelines();
 ///drawNote('8', 100, 100);
 
 });
