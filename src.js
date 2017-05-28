@@ -73,15 +73,19 @@ var isDigit = function(string) {
   return /^\d+$/.test(string);
 }
 
+ var isValidTimeSig = function(string) {
+   return /^{\d+}$/.test(string);
+ }
+
 var parseInputString = function(inputString) {
   clearNotation();
   drawAllLines();
-  showBarGuidelines();
+  // showBarGuidelines();
 
   //SPLIT BY SPACE TOKEN
   var atoms = inputString.split(' ');
-
   var cursor;
+
   var resetCursor = function() {
     cursor = startOfBars[0] + (timeSignatureGap / 2);
     console.log(cursor);
@@ -95,13 +99,13 @@ var parseInputString = function(inputString) {
 
 
   var printNotes = function(index) {
-    context.strokeStyle = 'orange';
-    context.beginPath();
-    context.moveTo(cursor, 50);
-    context.lineTo(cursor, height);
-    context.stroke();
-    context.closePath();
-    strokeStyle = 'black';
+    // context.strokeStyle = 'orange';
+    // context.beginPath();
+    // context.moveTo(cursor, 50);
+    // context.lineTo(cursor, height);
+    // context.stroke();
+    // context.closePath();
+    // strokeStyle = 'black';
 
     drawNote(atoms[i].substring(1), cursor, currentStringPos );
     if(!inChordMode) {
@@ -145,7 +149,7 @@ var parseInputString = function(inputString) {
       //rest note; skip a position
       cursor += timeSignatureGap;
     }
-    else if( (atoms[i].substring(0,1) === '{') && (isDigit(atoms[i].substring(1,2)))
+    else if( (atoms[i].substring(0,1) === '{') && (isDigit(atoms[i].substring(1, 2)))
               && (atoms[i].slice(-1) === '}') ) {
       var timeSig = atoms[i].substring(1,2);
       var timeString = 'current time signature: ' + timeSig.toString() + '/4';
@@ -171,7 +175,7 @@ var parseInputString = function(inputString) {
 var clearNotation = function() {
   context.clearRect(0.0, 0.0,
     $('#notation').width(),
-    $('#notation').height(),
+    $('#notation').height()
   );
 };
 
@@ -234,7 +238,7 @@ var drawStringNotes = function() {
 var drawNote = function(noteString, x, y) {
   var textRectHeight = 20;
   var textRectWidthOneChar = textRectHeight;
-  var textRectWidthTwoChar = textRectHeight * 2;
+  var textRectWidthTwoChar = textRectHeight * 1.3;
   var textRectWidth;
   if(noteString.length === 1) {
     textRectWidth = textRectWidthOneChar;
@@ -242,14 +246,14 @@ var drawNote = function(noteString, x, y) {
     textRectWidth = textRectWidthTwoChar;
   }
   var leftMargin = getLeftMargin();
-  context.fillStyle = 'yellow';//backgroundColor;
+  context.fillStyle = backgroundColor;
   context.font = '16px sans-serif';
   context.textBaseline = 'middle';
 
-  context.fillRect(x - (textRectWidth / 3.5), y - (textRectHeight / 1.75),
+  context.fillRect(x - (textRectWidth / 2), y - (textRectHeight / 1.75),
                    textRectWidth, textRectHeight);
   context.fillStyle = 'black';
-  context.fillText(noteString, x, y);
+  context.fillText(noteString, x - (textRectWidth / 4), y);
 
   /** just a test *****
   for(var i=0; i < guitarStrings.length; i++) {
@@ -287,7 +291,7 @@ var getKeyValue = function(keycode) {
 defineStringPositions();
 defineBarPositions();
 drawAllLines();
-showBarGuidelines();
+// showBarGuidelines();
 ///drawNote('8', 100, 100);
 
 });
