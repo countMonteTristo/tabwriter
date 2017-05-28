@@ -21,6 +21,8 @@ var numStaves = 8;
 var numStrings = 6;
 var firstStringPosition = -80;
 var barWidth;
+var timeSignatureGap = barWidth / 4;
+
 /* define vertcal position of lines
  [set of strings][string] */
 var defineStringPositions = function() {
@@ -78,23 +80,36 @@ var parseInputString = function(inputString) {
 
   //SPLIT BY SPACE TOKEN
   var atoms = inputString.split(' ');
-  var timeSignatureGap = barWidth / 4;
 
   var cursor;
   var resetCursor = function() {
     cursor = startOfBars[0] + (timeSignatureGap / 2);
+    console.log(cursor);
   };
   resetCursor();
+
+
   var currentStringPos = guitarStrings[0];
   var currentStaveOffset = 0.0;
   var inChordMode = false;
 
+
   var printNotes = function(index) {
+    context.strokeStyle = 'orange';
+    context.beginPath();
+    context.moveTo(cursor, 50);
+    context.lineTo(cursor, height);
+    context.stroke();
+    context.closePath();
+    strokeStyle = 'black';
+
     drawNote(atoms[i].substring(1), cursor, currentStringPos );
     if(!inChordMode) {
       cursor += timeSignatureGap;
+
     }
   }
+
 
   for( var i=0; i < atoms.length; i++) {
     if( atoms[i].substring(0,1) === 'e' ) {
@@ -146,9 +161,10 @@ var parseInputString = function(inputString) {
     }
     else if( atoms[i] === '\n' ) {
       currentStaveOffset += 6;
-      console.log(currentStaveOffset);
+      //console.log(currentStaveOffset);
       resetCursor();
     }
+    //console.log(timeSignatureGap)
   }
 };
 
@@ -226,7 +242,7 @@ var drawNote = function(noteString, x, y) {
     textRectWidth = textRectWidthTwoChar;
   }
   var leftMargin = getLeftMargin();
-  context.fillStyle = 'green';//backgroundColor;
+  context.fillStyle = 'yellow';//backgroundColor;
   context.font = '16px sans-serif';
   context.textBaseline = 'middle';
 
@@ -246,6 +262,12 @@ var drawNote = function(noteString, x, y) {
 }
 var showBarGuidelines = function() {
   context.strokeStyle = 'red';
+
+  context.beginPath();
+  context.moveTo(leftMargin, 50);
+  context.lineTo(leftMargin, height);
+  context.stroke();
+  context.closePath();
 
   for(var i=0; i<startOfBars.length; i++) {
     context.beginPath();
