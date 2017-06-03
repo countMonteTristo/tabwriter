@@ -141,7 +141,7 @@ var parseInputString = function(inputString) {
 
     }
     else if( atoms[i].substring(0,1) === 'E' ) {
-      currentStringPos = guitarStrings[5] + currentStaveOffset;
+      currentStringPos = guitarStrings[5 + currentStaveOffset];
       printNotes(i);
 
     }
@@ -163,7 +163,7 @@ var parseInputString = function(inputString) {
       inChordMode = false;
       cursor += timeSignatureGap;
     }
-    else if( atoms[i] === '\n' ) {
+    else if( atoms[i] === 'N' ) {
       currentStaveOffset += 6;
       //console.log(currentStaveOffset);
       resetCursor();
