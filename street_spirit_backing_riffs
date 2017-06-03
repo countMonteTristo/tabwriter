@@ -1,7 +1,7 @@
-{8} e0 [  b3 d2 ] e0 [ b1 d2 ] e0 [ b0 d2 ] r r e0 [  b3 d2 ] e0 [ b1 d2 ] e0 [ b0 d2 ] r r
- e0 [  b3 d2 ] e0 [ b1 d2 ] e0 [ b0 d2 ] r r e0 [  b3 d2 ] e0 [ b1 d2 ] e0 [ b0 d2 ] r r N
- {4}  [ a0 d7 ] d9 d10  r [ a0 d7 ] d9 d10 r [ a0 d7 ] d9 d7 g8 [ a0 d7 ] d9 d10 r N
- {4}  [ a0 d7 ] d9 d10  r [ a0 d7 ] d9 d10 r [ a0 d7 ] d9 d7 g8 [ a0 d7 ] d9 d10 r N
- {4}  [ E0 a7 ] a10 a9 a7 [ E0 a7 ] a9 a10 r [ E0 a7 ] a10 a9 a7 [ E0 a7 ] a9 a10 r N
- {4}  [ a0 d7 ] d9 d10  r [ a0 d7 ] d9 d10 r [ a0 d7 ] d9 d10 r [ a0 d7 ] d9 d10 r N
- {4}  E7  d10 d9 a10 E10 d9 d10 r E10 d9 d10 r E10 d9 d10 r N
+    {8} e0 [  b3 d2 ] e0 [ b1 d2 ] e0 [ b0 d2 ] r r e0 [  b3 d2 ] e0 [ b1 d2 ] e0 [ b0 d2 ] r r
+ e0 [  b3 d2 ] e0 [ b1 d2 ] e0 [ b0 d2 ] r r e0 [  b3 d2 ] e0 [ b1 d2 ] e0 [ b0 d2 ] r r N 
+ {4}  [ a0 d7 ] d9 d10  r [ a0 d7 ] d9 d10 r [ a0 d7 ] d9 d7 g9 [ a0 d7 ] d9 d10 r N 
+ {4}  [ a0 d7 ] d9 d10  r [ a0 d7 ] d9 d10 r [ a0 d7 ] d9 d7 g9 [ a0 d7 ] d9 d10 r N 
+ {4}  [ E0 a7 ] a10 a9 a7 [ E0 a7 ] a9 a10 r [ E0 a7 ] a10 a9 a7 [ E0 a7 ] a9 a10 r N 
+ {4}  [ a0 d7 ] d9 d10  r [ a0 d7 ] d9 d10 r [ a0 d7 ] d9 d10 r [ a0 d7 ] d9 d10 r N 
+ {4}  E7  d10 d9 a10 E10 d9 d10 r E10 d9 d10 r E10 d9 d10 r N 
