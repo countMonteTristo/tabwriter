@@ -21,7 +21,7 @@ var numStaves = 8;
 var numStrings = 6;
 var firstStringPosition = -80;
 var barWidth;
-var timeSignatureGap = barWidth / 4;
+var timeSignatureGap;
 
 /* define vertcal position of lines
  [set of strings][string] */
@@ -51,6 +51,9 @@ var defineBarPositions = function() {
   var annotationInset = 70; //a space to put time sig etc
   var fourBarsWidth = staveWidth - annotationInset;
   barWidth = fourBarsWidth / 4;
+  if( timeSignatureGap === null ) {
+
+  }
 
   startOfBars[0] = leftMargin + annotationInset;
   startOfBars[1] = startOfBars[0] + barWidth;
@@ -77,7 +80,45 @@ var isDigit = function(string) {
    return /^{\d+}$/.test(string);
  }
 
+
 var parseInputString = function(inputString) {
+  clearNotation();
+  drawAllLines();
+
+  //on encountering a coding character function enters one of four states:
+  var parsingStates = [ 'parsingNote', 'parsingChord',
+                        'parsingtimeSig', 'parsingAnnotation' ];
+  var currentState;
+  //the following act as tokens to enter one of the states:
+  var tokens = ['E', 'a', 'd', 'g', 'b', 'e', 'r', '[', '{', '(' ];
+  //current point in inputString
+  var index = 0;
+
+  var isToken = function(character)  {
+     for(var i=0; i < tokens.length; i++) {
+       if(character === tokens[i]) {
+         return true;
+       }
+     }
+     return false;
+  };
+
+  // console.log(inputString.length);
+  // var currentChar;
+  currentChar = inputString.substring(0,1);
+  // console.log(currentChar);
+  while( index < inputString.length) {
+    if ( isToken(currentChar) ) {
+      console.log('token encountered: '  + currentChar);
+    } else {
+      console.log('not a token : '  + currentChar);
+    }
+    index++;
+    currentChar = inputString.substring(index, index + 1);
+  }
+};
+
+var parseInputStringOld = function(inputString) {
   clearNotation();
   drawAllLines();
   // showBarGuidelines();
