@@ -84,10 +84,11 @@ var parseInputString = function(inputString) {
   drawAllLines();
 
   //on encountering a coding character function enters one of four states:
-  var parsingStates = [ 'parsingNote', 'parsingChord',
-                        'parsingtimeSig', 'parsingAnnotation',
-                       'ignoringCharacter' ];
-  var currentState;
+  var parsingMode = { note: 0, chord:1, timeSig: 2,
+		                annotation: 3, ignoringChar: 4};
+
+  var currentMode = parsingMode.ignoringChar;
+  console.log(currentMode);
   //the following act as tokens to enter one of the states:
   var noteTokens = ['E', 'a', 'd', 'g', 'b', 'e'];
   var restToken = 'r'
@@ -145,7 +146,7 @@ var parseInputString = function(inputString) {
 
   var printNote = function(noteString) {
     drawNote( noteString, cursor, currentStringPos );
-    if(currentState === parsingStates[0]) {
+    if(currentMode === parsingMode.note ) {
       cursor += timeSignatureGap;
     }
   }
@@ -156,7 +157,7 @@ var parseInputString = function(inputString) {
   // console.log(currentChar);
   while( index < inputString.length) {
     if ( isNoteToken(currentChar) )  {
-      currentState = parsingStates[0];
+      currentMode = parsingMode.note;
       setCurrentStringPosition(currentChar);
       index++;
       currentChar = inputString.substring(index, index + 1);
@@ -164,7 +165,7 @@ var parseInputString = function(inputString) {
     } else {
       console.log('not a token : '  + currentChar);
     }
-    console.log(currentState);
+    console.log(currentMode);
     index++;
     currentChar = inputString.substring(index, index + 1);
   }
