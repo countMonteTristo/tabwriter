@@ -78,14 +78,19 @@ var isDigit = function(string) {
    return /^{\d+}$/.test(string);
  }
 
-
 var parseInputString = function(inputString) {
   clearNotation()
   drawAllLines();
 
   //on encountering a coding character function enters one of four states:
-  var parsingMode = { note: 0, chord:1, timeSig: 2,
-		                annotation: 3, ignoringChar: 4};
+  var parsingMode = {
+                      note: 0,
+                      rest: 1,
+                      chord: 2,
+                      timeSig: 3,
+                      annotation: 4,
+                      ignoringChar: 5
+                    };
 
   var currentMode = parsingMode.ignoringChar;
   console.log(currentMode);
@@ -144,6 +149,25 @@ var parseInputString = function(inputString) {
     }
   }
 
+
+  var showMode = function(val) {
+    res = '';
+    if (val === 0) {
+      res = 'note';
+    } else if (val === 1) {
+      res = 'rest';
+    } else if (val === 2) {
+      res = 'chord';
+    } else if (val === 3) {
+      res = 'time';
+    } else if (val === 4) {
+      res = 'annotate';
+    } else if (val === 5) {
+      res = 'ignore';
+    }
+    return res;
+  };
+
   var printNote = function(noteString) {
     drawNote( noteString, cursor, currentStringPos );
     if(currentMode === parsingMode.note ) {
@@ -156,16 +180,42 @@ var parseInputString = function(inputString) {
   currentChar = inputString.substring(0,1);
   // console.log(currentChar);
   while( index < inputString.length) {
+    //FIRST SET MODE AT THIS INDEX
     if ( isNoteToken(currentChar) )  {
       currentMode = parsingMode.note;
-      setCurrentStringPosition(currentChar);
-      index++;
-      currentChar = inputString.substring(index, index + 1);
-      printNote(currentChar);
-    } else {
-      console.log('not a token : '  + currentChar);
     }
-    console.log(currentMode);
+    else if (currentChar === restToken ) {
+      currentMode = parsingMode.rest;
+    }
+    else if (currentChar === chordToken ) {
+      currentMode = parsingMode.chord;
+    }
+    else if (currentChar === timeSigToken ) {
+      currentMode = parsingMode.timeSig;
+    }
+    else if (currentChar === annotationToken ) {
+      currentMode = parsingMode.annotation;
+    }
+    else {
+      currentMode = parsingMode.ignoringChar;
+    }
+
+  // setCurrentStringPosition(currentChar);
+      // //read ahead 2 chars
+      // var noteBuffer = inputString.substring(index, index + 2);
+      // console.log()
+      // index++;
+      // currentChar = inputString.substring(index, index + 1);
+      // //if first following char exist and is digit then print in position
+      // if( currentChar && isDigit(currentChar) ) {
+      //   //if 2nd following char exist and is digit then print in position
+      //   index++;
+      //   currentChar = inputString.substring(index, index + 1);
+      //
+      // }
+      // currentChar = inputString.substring(index, index + 1);
+      // printNote(currentChar);
+    console.log(showMode(currentMode));  
     index++;
     currentChar = inputString.substring(index, index + 1);
   }
