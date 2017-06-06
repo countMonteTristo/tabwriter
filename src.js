@@ -51,9 +51,7 @@ var defineBarPositions = function() {
   var annotationInset = 70; //a space to put time sig etc
   var fourBarsWidth = staveWidth - annotationInset;
   barWidth = fourBarsWidth / 4;
-  if( timeSignatureGap === null ) {
-
-  }
+  timeSignatureGap = barWidth / 4; //default
 
   startOfBars[0] = leftMargin + annotationInset;
   startOfBars[1] = startOfBars[0] + barWidth;
@@ -82,37 +80,91 @@ var isDigit = function(string) {
 
 
 var parseInputString = function(inputString) {
-  clearNotation();
+  clearNotation()
   drawAllLines();
 
   //on encountering a coding character function enters one of four states:
   var parsingStates = [ 'parsingNote', 'parsingChord',
-                        'parsingtimeSig', 'parsingAnnotation' ];
+                        'parsingtimeSig', 'parsingAnnotation',
+                       'ignoringCharacter' ];
   var currentState;
   //the following act as tokens to enter one of the states:
-  var tokens = ['E', 'a', 'd', 'g', 'b', 'e', 'r', '[', '{', '(' ];
+  var noteTokens = ['E', 'a', 'd', 'g', 'b', 'e'];
+  var restToken = 'r'
+  var chordToken = '[';
+  var timeSigToken = '{';
+  var annotationToken = '(';
+
   //current point in inputString
   var index = 0;
 
-  var isToken = function(character)  {
-     for(var i=0; i < tokens.length; i++) {
-       if(character === tokens[i]) {
+  var isNoteToken = function(character)  {
+     for(var i=0; i < noteTokens.length; i++) {
+       if(character === noteTokens[i]) {
          return true;
        }
      }
      return false;
   };
 
+  var cursor = 0;
+
+  var resetCursor = function() {
+    cursor = startOfBars[0] + (timeSignatureGap / 2);
+  };
+  resetCursor();
+
+  console.log('startOfBars[0]: ', startOfBars[0]);
+  console.log('timeSignatureGap: ', timeSignatureGap);
+  console.log('cursor: ', cursor);
+
+  var currentStringPos = guitarStrings[0];
+  var currentStaveOffset = 0.0;
+  var inChordMode = false;
+
+  var setCurrentStringPosition = function(stringName) {
+    if( stringName === 'e' ) {
+      currentStringPos = guitarStrings[0 + currentStaveOffset];
+    }
+    else if ( stringName === 'b' ) {
+      currentStringPos = guitarStrings[1 + currentStaveOffset];
+    }
+    else if ( stringName === 'g' ) {
+      currentStringPos = guitarStrings[2 + currentStaveOffset];
+    }
+    else if ( stringName === 'd' ) {
+      currentStringPos = guitarStrings[3 + currentStaveOffset];
+    }
+    else if( stringName === 'a' ) {
+      currentStringPos = guitarStrings[4 + currentStaveOffset];
+    }
+    else if( stringName === 'E' ) {
+      currentStringPos = guitarStrings[5 + currentStaveOffset];
+    }
+  }
+
+  var printNote = function(noteString) {
+    drawNote( noteString, cursor, currentStringPos );
+    if(currentState === parsingStates[0]) {
+      cursor += timeSignatureGap;
+    }
+  }
+
   // console.log(inputString.length);
   // var currentChar;
   currentChar = inputString.substring(0,1);
   // console.log(currentChar);
   while( index < inputString.length) {
-    if ( isToken(currentChar) ) {
-      console.log('token encountered: '  + currentChar);
+    if ( isNoteToken(currentChar) )  {
+      currentState = parsingStates[0];
+      setCurrentStringPosition(currentChar);
+      index++;
+      currentChar = inputString.substring(index, index + 1);
+      printNote(currentChar);
     } else {
       console.log('not a token : '  + currentChar);
     }
+    console.log(currentState);
     index++;
     currentChar = inputString.substring(index, index + 1);
   }
@@ -139,7 +191,7 @@ var parseInputStringOld = function(inputString) {
   var inChordMode = false;
 
 
-  var printNotes = function(index) {
+  var printNote = function(index) {
     // context.strokeStyle = 'orange';
     // context.beginPath();
     // context.moveTo(cursor, 50);
