@@ -5,8 +5,6 @@ var context = canvas.getContext('2d');
 context.translate(0.5, 0.5);
 var backgroundColor = '#fffff0';
 var marginWidth = 40;
-var height = $('#notation').height();
-console.log(height);
 
 var startOfBars = [];
 $( "#input_textarea" ).keyup(function() {
@@ -93,7 +91,6 @@ var parseInputString = function(inputString) {
                     };
 
   var currentMode = parsingMode.ignoringChar;
-  console.log(currentMode);
   //the following act as tokens to enter one of the states:
   var noteTokens = ['E', 'a', 'd', 'g', 'b', 'e'];
   var restToken = 'r'
@@ -120,9 +117,9 @@ var parseInputString = function(inputString) {
   };
   resetCursor();
 
-  console.log('startOfBars[0]: ', startOfBars[0]);
-  console.log('timeSignatureGap: ', timeSignatureGap);
-  console.log('cursor: ', cursor);
+  // console.log('startOfBars[0]: ', startOfBars[0]);
+  // console.log('timeSignatureGap: ', timeSignatureGap);
+  // console.log('cursor: ', cursor);
 
   var currentStringPos = guitarStrings[0];
   var currentStaveOffset = 0.0;
@@ -163,22 +160,20 @@ var parseInputString = function(inputString) {
     } else if (val === 4) {
       res = 'annotate';
     } else if (val === 5) {
-      res = 'ignore';
+      res = '';//'ignore';
     }
     return res;
   };
 
   var printNote = function(noteString) {
     drawNote( noteString, cursor, currentStringPos );
-    if(currentMode === parsingMode.note ) {
-      cursor += timeSignatureGap;
-    }
   }
 
   // console.log(inputString.length);
   // var currentChar;
   currentChar = inputString.substring(0,1);
   // console.log(currentChar);
+  //SET MODE (OR STATE)
   while( index < inputString.length) {
     //FIRST SET MODE AT THIS INDEX
     if ( isNoteToken(currentChar) )  {
@@ -200,7 +195,20 @@ var parseInputString = function(inputString) {
       currentMode = parsingMode.ignoringChar;
     }
 
-  // setCurrentStringPosition(currentChar);
+    //NOW OPERATE ON NEXT CHAR IN STRING IN MODE
+    if(currentMode === parsingMode.note) {
+      var max_length = 2  //range of frets from 0 to 24?, 2 digits anyway
+      printNote(currentChar);
+    } else if (currentMode === parsingMode.rest) {
+
+    } else if (currentMode === parsingMode.chord) {
+
+    } else if (currentMode === parsingMode.timeSig) {
+
+    } else if (currentMode === parsingMode.annotation) {
+
+    }
+      // setCurrentStringPosition(currentChar);
       // //read ahead 2 chars
       // var noteBuffer = inputString.substring(index, index + 2);
       // console.log()
@@ -215,7 +223,7 @@ var parseInputString = function(inputString) {
       // }
       // currentChar = inputString.substring(index, index + 1);
       // printNote(currentChar);
-    console.log(showMode(currentMode));  
+    console.log(showMode(currentMode));
     index++;
     currentChar = inputString.substring(index, index + 1);
   }
