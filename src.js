@@ -5,6 +5,8 @@ var context = canvas.getContext('2d');
 context.translate(0.5, 0.5);
 var backgroundColor = '#fffff0';
 var marginWidth = 40;
+var height = $('#notation').height();
+console.log(height);
 
 var startOfBars = [];
 $( "#input_textarea" ).keyup(function() {
@@ -19,7 +21,7 @@ var numStaves = 8;
 var numStrings = 6;
 var firstStringPosition = -80;
 var barWidth;
-var timeSignatureGap;
+var timeSignatureGap = barWidth / 4;
 
 /* define vertcal position of lines
  [set of strings][string] */
@@ -49,7 +51,6 @@ var defineBarPositions = function() {
   var annotationInset = 70; //a space to put time sig etc
   var fourBarsWidth = staveWidth - annotationInset;
   barWidth = fourBarsWidth / 4;
-  timeSignatureGap = barWidth / 4; //default
 
   startOfBars[0] = leftMargin + annotationInset;
   startOfBars[1] = startOfBars[0] + barWidth;
@@ -77,159 +78,6 @@ var isDigit = function(string) {
  }
 
 var parseInputString = function(inputString) {
-  clearNotation()
-  drawAllLines();
-
-  //on encountering a coding character function enters one of four states:
-  var parsingMode = {
-                      note: 0,
-                      rest: 1,
-                      chord: 2,
-                      timeSig: 3,
-                      annotation: 4,
-                      ignoringChar: 5
-                    };
-
-  var currentMode = parsingMode.ignoringChar;
-  //the following act as tokens to enter one of the states:
-  var noteTokens = ['E', 'a', 'd', 'g', 'b', 'e'];
-  var restToken = 'r'
-  var chordToken = '[';
-  var timeSigToken = '{';
-  var annotationToken = '(';
-
-  //current point in inputString
-  var index = 0;
-
-  var isNoteToken = function(character)  {
-     for(var i=0; i < noteTokens.length; i++) {
-       if(character === noteTokens[i]) {
-         return true;
-       }
-     }
-     return false;
-  };
-
-  var cursor = 0;
-
-  var resetCursor = function() {
-    cursor = startOfBars[0] + (timeSignatureGap / 2);
-  };
-  resetCursor();
-
-  // console.log('startOfBars[0]: ', startOfBars[0]);
-  // console.log('timeSignatureGap: ', timeSignatureGap);
-  // console.log('cursor: ', cursor);
-
-  var currentStringPos = guitarStrings[0];
-  var currentStaveOffset = 0.0;
-  var inChordMode = false;
-
-  var setCurrentStringPosition = function(stringName) {
-    if( stringName === 'e' ) {
-      currentStringPos = guitarStrings[0 + currentStaveOffset];
-    }
-    else if ( stringName === 'b' ) {
-      currentStringPos = guitarStrings[1 + currentStaveOffset];
-    }
-    else if ( stringName === 'g' ) {
-      currentStringPos = guitarStrings[2 + currentStaveOffset];
-    }
-    else if ( stringName === 'd' ) {
-      currentStringPos = guitarStrings[3 + currentStaveOffset];
-    }
-    else if( stringName === 'a' ) {
-      currentStringPos = guitarStrings[4 + currentStaveOffset];
-    }
-    else if( stringName === 'E' ) {
-      currentStringPos = guitarStrings[5 + currentStaveOffset];
-    }
-  }
-
-
-  var showMode = function(val) {
-    res = '';
-    if (val === 0) {
-      res = 'note';
-    } else if (val === 1) {
-      res = 'rest';
-    } else if (val === 2) {
-      res = 'chord';
-    } else if (val === 3) {
-      res = 'time';
-    } else if (val === 4) {
-      res = 'annotate';
-    } else if (val === 5) {
-      res = '';//'ignore';
-    }
-    return res;
-  };
-
-  var printNote = function(noteString) {
-    drawNote( noteString, cursor, currentStringPos );
-  }
-
-  // console.log(inputString.length);
-  // var currentChar;
-  currentChar = inputString.substring(0,1);
-  // console.log(currentChar);
-  //SET MODE (OR STATE)
-  while( index < inputString.length) {
-    //FIRST SET MODE AT THIS INDEX
-    if ( isNoteToken(currentChar) )  {
-      currentMode = parsingMode.note;
-    }
-    else if (currentChar === restToken ) {
-      currentMode = parsingMode.rest;
-    }
-    else if (currentChar === chordToken ) {
-      currentMode = parsingMode.chord;
-    }
-    else if (currentChar === timeSigToken ) {
-      currentMode = parsingMode.timeSig;
-    }
-    else if (currentChar === annotationToken ) {
-      currentMode = parsingMode.annotation;
-    }
-    else {
-      currentMode = parsingMode.ignoringChar;
-    }
-
-    //NOW OPERATE ON NEXT CHAR IN STRING IN MODE
-    if(currentMode === parsingMode.note) {
-      var max_length = 2  //range of frets from 0 to 24?, 2 digits anyway
-      printNote(currentChar);
-    } else if (currentMode === parsingMode.rest) {
-
-    } else if (currentMode === parsingMode.chord) {
-
-    } else if (currentMode === parsingMode.timeSig) {
-
-    } else if (currentMode === parsingMode.annotation) {
-
-    }
-      // setCurrentStringPosition(currentChar);
-      // //read ahead 2 chars
-      // var noteBuffer = inputString.substring(index, index + 2);
-      // console.log()
-      // index++;
-      // currentChar = inputString.substring(index, index + 1);
-      // //if first following char exist and is digit then print in position
-      // if( currentChar && isDigit(currentChar) ) {
-      //   //if 2nd following char exist and is digit then print in position
-      //   index++;
-      //   currentChar = inputString.substring(index, index + 1);
-      //
-      // }
-      // currentChar = inputString.substring(index, index + 1);
-      // printNote(currentChar);
-    console.log(showMode(currentMode));
-    index++;
-    currentChar = inputString.substring(index, index + 1);
-  }
-};
-
-var parseInputStringOld = function(inputString) {
   clearNotation();
   drawAllLines();
   // showBarGuidelines();
@@ -250,7 +98,7 @@ var parseInputStringOld = function(inputString) {
   var inChordMode = false;
 
 
-  var printNote = function(index) {
+  var printNotes = function(index) {
     // context.strokeStyle = 'orange';
     // context.beginPath();
     // context.moveTo(cursor, 50);
