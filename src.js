@@ -215,7 +215,7 @@ var parseInputString = function(inputString) {
       // }
       // currentChar = inputString.substring(index, index + 1);
       // printNote(currentChar);
-    console.log(showMode(currentMode));  
+    console.log(showMode(currentMode));
     index++;
     currentChar = inputString.substring(index, index + 1);
   }
