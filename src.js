@@ -239,11 +239,14 @@ var drawNote = function(noteString, x, y) {
   var textRectHeight = 20;
   var textRectWidthOneChar = textRectHeight;
   var textRectWidthTwoChar = textRectHeight * 1.3;
+  var textLeftMargin;
   var textRectWidth;
   if(noteString.length === 1) {
     textRectWidth = textRectWidthOneChar;
+    textLeftMargin = x - (textRectWidth / 4);
   } else if (noteString.length === 2) {
     textRectWidth = textRectWidthTwoChar;
+    textLeftMargin =  x - (textRectWidth / 3);
   }
   var leftMargin = getLeftMargin();
   context.fillStyle = backgroundColor;
@@ -253,7 +256,7 @@ var drawNote = function(noteString, x, y) {
   context.fillRect(x - (textRectWidth / 2), y - (textRectHeight / 1.75),
                    textRectWidth, textRectHeight);
   context.fillStyle = 'black';
-  context.fillText(noteString, x - (textRectWidth / 4), y);
+  context.fillText(noteString, textLeftMargin, y);
 
   /** just a test *****
   for(var i=0; i < guitarStrings.length; i++) {
