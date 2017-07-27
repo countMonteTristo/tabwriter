@@ -1,0 +1,36 @@
+body {
+text-align: center;
+}
+
+canvas {
+  border: 2px;
+  border-color: grey;
+  
+}
+
+#base {
+  width: 100%
+  height: 1600;
+  background-color: black;
+}
+
+#main-container {
+  margin: auto;
+  width: 65%;
+  background-color: white;
+
+}
+
+#input-panel {
+  margin: 20px;
+  float: left;
+  /*background-color: red;*/
+
+}
+
+#controls-panel {
+  margin: 20px;
+  float: left;
+
+  /*background-color: blue;*/
+}

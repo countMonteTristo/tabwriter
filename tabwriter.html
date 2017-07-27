@@ -1,18 +1,34 @@
 <html>
   <head>
     <meta name="tab-writer">
-    <meta description="converts formatted string to guitar tabulature">
+    <meta description="converts a formatted string to guitar tabuilature">
     <meta charset="utf-8">
     <script src="jquery-3.2.1.min.js" ></script>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <textarea id="input_textarea" rows="4" cols="100">
-    </textarea>
-    <br />
-    <canvas id="notation" width="1190" height="1683"
+    <div id="base">
+    <div id="main-container">
+    <div id="input-panel">
+      <textarea id="input_textarea" rows="4" cols="100">
+      </textarea>
+      <br />
+    </div>
+    <div id="controls-panel">
+      <table>
+        <tr><td><input type="button" id="save-btn" value="save tab" disabled="true"></td></tr>
+        <tr><td><input type="button" id="load-btn" value="load tab" disabled="true"></td></tr>
+        <tr><td><input type="button" id="export-btn" value="export as .png" disabled="true"></td></tr>
+      </table>
+    </div>
+    <div>
+      <canvas id="notation" width="1190" height="1683"
              style="background-color: #fffff0;"
              border-width="2">
-    </canvas>
+      </canvas>
+    </div>
+    </div>
+    </div>
     <script src="src.js"></script>
   </body>
 </html>
